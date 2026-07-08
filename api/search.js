@@ -1,6 +1,6 @@
 // api/search.js
 // Vercel Serverless Function — BSM Candidate Live Search
-// Queries all 6 pipeline sheets in Smartsheet, filters in-memory, returns merged results.
+// Queries pipeline sheets in Smartsheet, filters in-memory, returns merged results.
 
 const SMARTSHEET_API = "https://api.smartsheet.com/2.0";
 
@@ -14,8 +14,17 @@ const SHEETS = [
   { id: "4234298248875908", stage: "HOTEL GAP POOL" },
 ];
 
-// Column titles we care about. We resolve these to column IDs per-sheet at runtime
-// (titles are consistent across sheets, but IDs differ since they're separate sheets).
+// Position type controls which sheets are searched and which column is matched.
+// "suggested": Suggested Position, sourced ONLY from Hotel Gap Pool + Assessed.
+// "apply": Position Apply, sourced from the 4 earlier funnel stages.
+const SUGGESTED_STAGES = ["HOTEL GAP POOL", "Recruitment - Assessed"];
+const APPLY_STAGES = [
+  "Recruitment - Newly Registered",
+  "Recruitment - Online Registration",
+  "Recruitment - Screening",
+  "Recruitment - Ready to Assess",
+];
+
 const WANTED_COLUMNS = [
   "PIN / CREW ID",
   "FIRST NAME",
@@ -40,9 +49,8 @@ const WANTED_COLUMNS = [
   "CREW POOL STATUS",
 ];
 
-// In-memory cache for column maps (resets on cold start — fine for this use case)
 const columnMapCache = {};
-const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes
+const CACHE_TTL_MS = 10 * 60 * 1000;
 
 function getToken() {
   const token = process.env.SMARTSHEET_API_TOKEN;
@@ -60,7 +68,7 @@ async function getColumnMap(sheetId) {
   if (!res.ok) throw new Error(`Failed to fetch columns for sheet ${sheetId}: ${res.status}`);
   const data = await res.json();
 
-  const map = {}; // title (upper) -> column id
+  const map = {};
   for (const col of data.data) {
     map[col.title.trim().toUpperCase()] = col.id;
   }
@@ -91,7 +99,6 @@ async function fetchSheetRows(sheetId, columnIds) {
 function cellValue(row, colId) {
   const cell = row.cells.find((c) => c.columnId === colId);
   if (!cell) return null;
-  // MULTI_PICKLIST values sometimes arrive as arrays in cell.value or displayValue
   return cell.displayValue ?? cell.value ?? null;
 }
 
@@ -100,6 +107,13 @@ function rowToCandidate(row, idToTitle, stage) {
   for (const [colId, titleUpper] of Object.entries(idToTitle)) {
     c[titleUpper] = cellValue(row, Number(colId));
   }
+  const positionApply = c["POSITION APPLY"] || "";
+  const suggestedPosition = c["SUGGESTED POSITION"] || c["SUGESTED POSITION"] || "";
+  const isSuggestedSheet = SUGGESTED_STAGES.includes(stage);
+  // The Position shown per candidate depends on which sheet group they belong to.
+  const position = isSuggestedSheet
+    ? suggestedPosition || c["POSITION"] || ""
+    : positionApply || c["POSITION"] || "";
   return {
     pin: c["PIN / CREW ID"] || "",
     firstName: c["FIRST NAME"] || "",
@@ -111,7 +125,9 @@ function rowToCandidate(row, idToTitle, stage) {
     province: c["PROVINCE"] || "",
     city: c["CITY"] || "",
     department: c["DEPARTMENT"] || "",
-    position: c["POSITION"] || c["POSITION APPLY"] || c["SUGGESTED POSITION"] || c["SUGESTED POSITION"] || "",
+    positionApply,
+    suggestedPosition,
+    position,
     cruiseExperience: c["CRUISE EXPERIENCE"] || "",
     cruiseType: c["CRUISE TYPE"] || "",
     shipCompany: c["SHIP COMPANY"] || "",
@@ -131,7 +147,6 @@ function matchesFilters(candidate, filters) {
   if (cruiseType && String(candidate.cruiseType).toUpperCase() !== cruiseType.toUpperCase()) return false;
   if (province && String(candidate.province).toUpperCase() !== province.toUpperCase()) return false;
 
-  // Expiry filters: "valid until at least X" i.e. exp date >= given date
   if (c1dExpAfter) {
     if (!candidate.c1dExpDate) return false;
     if (new Date(candidate.c1dExpDate) < new Date(c1dExpAfter)) return false;
@@ -160,12 +175,13 @@ export default async function handler(req, res) {
       c1dExpAfter: req.query.c1dExpAfter || "",
       schengenExpAfter: req.query.schengenExpAfter || "",
     };
-    const stageFilter = req.query.stage || ""; // filter sheet asal (opsional)
+
+    // positionType: "apply" (default) | "suggested" — decides which sheets are searched.
+    const positionType = (req.query.positionType || "apply").toLowerCase();
+    const targetStages = positionType === "suggested" ? SUGGESTED_STAGES : APPLY_STAGES;
 
     const results = [];
-    const sheetsToQuery = stageFilter
-      ? SHEETS.filter((s) => s.stage.toUpperCase() === stageFilter.toUpperCase())
-      : SHEETS;
+    const sheetsToQuery = SHEETS.filter((s) => targetStages.includes(s.stage));
 
     await Promise.all(
       sheetsToQuery.map(async ({ id, stage }) => {
