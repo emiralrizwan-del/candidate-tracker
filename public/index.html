@@ -1,341 +1,343 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>BSM Candidate Search</title>
 <style>
-  :root {
-    --navy: #00396F;
-    --red: #E2231A;
-    --white: #FFFFFF;
-    --gray-bg: #F4F6F8;
-    --gray-border: #D8DEE4;
-    --text: #1A1A1A;
-  }
-  * { box-sizing: border-box; }
-  body {
-    font-family: Arial, Helvetica, sans-serif;
-    margin: 0;
-    background: var(--gray-bg);
-    color: var(--text);
-  }
-  header {
-    background: var(--navy);
-    color: var(--white);
-    padding: 20px 32px;
-  }
-  header h1 { margin: 0; font-size: 20px; }
-  header p { margin: 4px 0 0; font-size: 13px; opacity: 0.85; }
+:root {
+--navy: #00396F;
+--red: #E2231A;
+--white: #FFFFFF;
+--gray-bg: #F4F6F8;
+--gray-border: #D8DEE4;
+--text: #1A1A1A;
+}
+* { box-sizing: border-box; }
+body {
+font-family: Arial, Helvetica, sans-serif;
+margin: 0;
+background: var(--gray-bg);
+color: var(--text);
+}
+header {
+background: var(--navy);
+color: var(--white);
+padding: 20px 32px;
+}
+header h1 { margin: 0; font-size: 20px; }
+header p { margin: 4px 0 0; font-size: 13px; opacity: 0.85; }
 
-  #login-screen {
-    max-width: 360px;
-    margin: 80px auto;
-    background: var(--white);
-    padding: 32px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    text-align: center;
-  }
-  #login-screen input {
-    width: 100%;
-    padding: 10px;
-    margin: 12px 0;
-    border: 1px solid var(--gray-border);
-    border-radius: 4px;
-    font-size: 14px;
-  }
-  #login-screen button {
-    width: 100%;
-    padding: 10px;
-    background: var(--red);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  #login-error { color: var(--red); font-size: 13px; min-height: 18px; }
+#login-screen {
+max-width: 360px;
+margin: 80px auto;
+background: var(--white);
+padding: 32px;
+border-radius: 8px;
+box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+text-align: center;
+}
+#login-screen input {
+width: 100%;
+padding: 10px;
+margin: 12px 0;
+border: 1px solid var(--gray-border);
+border-radius: 4px;
+font-size: 14px;
+}
+#login-screen button {
+width: 100%;
+padding: 10px;
+background: var(--red);
+color: white;
+border: none;
+border-radius: 4px;
+font-weight: bold;
+cursor: pointer;
+}
+#login-error { color: var(--red); font-size: 13px; min-height: 18px; }
 
-  main {
-    max-width: 1200px;
-    margin: 24px auto;
-    padding: 0 24px;
-    display: none;
-  }
-  .filter-panel {
-    background: var(--white);
-    border-radius: 8px;
-    padding: 20px 24px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 14px;
-    align-items: end;
-  }
-  .field label {
-    display: block;
-    font-size: 12px;
-    font-weight: bold;
-    color: var(--navy);
-    margin-bottom: 4px;
-    text-transform: uppercase;
-  }
-  .field select, .field input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid var(--gray-border);
-    border-radius: 4px;
-    font-size: 13px;
-    font-family: inherit;
-  }
-  .actions { grid-column: 1 / -1; display: flex; gap: 10px; margin-top: 4px; }
-  button.primary {
-    background: var(--navy);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  button.secondary {
-    background: white;
-    color: var(--navy);
-    border: 1px solid var(--navy);
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
+main {
+max-width: 1200px;
+margin: 24px auto;
+padding: 0 24px;
+display: none;
+}
+.filter-panel {
+background: var(--white);
+border-radius: 8px;
+padding: 20px 24px;
+box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+gap: 14px;
+align-items: end;
+}
+.field label {
+display: block;
+font-size: 12px;
+font-weight: bold;
+color: var(--navy);
+margin-bottom: 4px;
+text-transform: uppercase;
+}
+.field select, .field input {
+width: 100%;
+padding: 8px;
+border: 1px solid var(--gray-border);
+border-radius: 4px;
+font-size: 13px;
+font-family: inherit;
+}
+.actions { grid-column: 1 / -1; display: flex; gap: 10px; margin-top: 4px; }
+button.primary {
+background: var(--navy);
+color: white;
+border: none;
+padding: 10px 20px;
+border-radius: 4px;
+font-weight: bold;
+cursor: pointer;
+}
+button.secondary {
+background: white;
+color: var(--navy);
+border: 1px solid var(--navy);
+padding: 10px 20px;
+border-radius: 4px;
+cursor: pointer;
+}
 
-  #status-line { margin: 16px 0 8px; font-size: 13px; color: #555; }
+#status-line { margin: 16px 0 8px; font-size: 13px; color: #555; }
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-  }
-  thead th {
-    background: var(--navy);
-    color: white;
-    text-align: left;
-    padding: 10px 12px;
-    font-size: 12px;
-    text-transform: uppercase;
-    position: sticky;
-    top: 0;
-  }
-  tbody td {
-    padding: 9px 12px;
-    border-bottom: 1px solid var(--gray-border);
-    font-size: 13px;
-  }
-  tbody tr:hover { background: #F9FBFD; }
-  .stage-badge {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 10px;
-    font-size: 11px;
-    font-weight: bold;
-    background: #EAF1F8;
-    color: var(--navy);
-  }
-  a.wa-link { color: var(--red); text-decoration: none; font-weight: bold; }
-  #loading { text-align: center; padding: 40px; color: #777; display: none; }
+table {
+width: 100%;
+border-collapse: collapse;
+background: white;
+border-radius: 8px;
+overflow: hidden;
+box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+thead th {
+background: var(--navy);
+color: white;
+text-align: left;
+padding: 10px 12px;
+font-size: 12px;
+text-transform: uppercase;
+position: sticky;
+top: 0;
+}
+tbody td {
+padding: 9px 12px;
+border-bottom: 1px solid var(--gray-border);
+font-size: 13px;
+}
+tbody tr:hover { background: #F9FBFD; }
+.stage-badge {
+display: inline-block;
+padding: 2px 8px;
+border-radius: 10px;
+font-size: 11px;
+font-weight: bold;
+background: #EAF1F8;
+color: var(--navy);
+}
+a.wa-link { color: var(--red); text-decoration: none; font-weight: bold; }
+#loading { text-align: center; padding: 40px; color: #777; display: none; }
 </style>
 </head>
 <body>
 
 <div id="login-screen">
-  <h2 style="color: var(--navy);">BSM Candidate Search</h2>
-  <p style="font-size: 13px; color: #666;">Masukkan akses internal untuk melanjutkan.</p>
-  <input type="password" id="password-input" placeholder="Password akses tim" />
-  <button onclick="login()">Masuk</button>
-  <div id="login-error"></div>
+<h2 style="color: var(--navy);">BSM Candidate Search</h2>
+<p style="font-size: 13px; color: #666;">Enter internal access to continue.</p>
+<input type="password" id="password-input" placeholder="Team access password" />
+<button onclick="login()">Sign In</button>
+<div id="login-error"></div>
 </div>
 
 <div id="app">
-  <header>
-    <h1>BSM Candidate Search</h1>
-    <p>Live search dari 6 sheet pipeline rekrutmen — Newly Registered → Gap Pool</p>
-  </header>
+<header>
+<h1>BSM Candidate Search</h1>
+<p>Live search across the recruitment pipeline sheets — Newly Registered &rarr; Gap Pool</p>
+</header>
 
-  <main id="main-content">
-    <div class="filter-panel">
-      <div class="field">
-        <label>Posisi</label>
-        <input type="text" id="f-position" placeholder="cth: Waiter, Chef de Partie" />
-      </div>
-      <div class="field">
-        <label>Cruise Experience</label>
-        <select id="f-cruiseExperience">
-          <option value="">Semua</option>
-          <option value="YES">Ya</option>
-          <option value="NO">Tidak</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Cruise Type</label>
-        <select id="f-cruiseType">
-          <option value="">Semua</option>
-          <option value="OCEAN CRUISE">Ocean Cruise</option>
-          <option value="RIVER CRUISE">River Cruise</option>
-          <option value="YACHT">Yacht</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Provinsi</label>
-        <input type="text" id="f-province" placeholder="cth: BALI" />
-      </div>
-      <div class="field">
-        <label>C1/D Visa Valid Sampai Min.</label>
-        <input type="date" id="f-c1dExpAfter" />
-      </div>
-      <div class="field">
-        <label>Schengen Valid Sampai Min.</label>
-        <input type="date" id="f-schengenExpAfter" />
-      </div>
-      <div class="field">
-        <label>Sheet Asal</label>
-        <select id="f-stage">
-          <option value="">Semua Sheet (6 sheet)</option>
-          <option value="Recruitment - Newly Registered">Recruitment - Newly Registered</option>
-          <option value="Recruitment - Online Registration">Recruitment - Online Registration</option>
-          <option value="Recruitment - Screening">Recruitment - Screening</option>
-          <option value="Recruitment - Ready to Assess">Recruitment - Ready to Assess</option>
-          <option value="Recruitment - Assessed">Recruitment - Assessed</option>
-          <option value="HOTEL GAP POOL">HOTEL GAP POOL</option>
-        </select>
-      </div>
-      <div class="actions">
-        <button class="primary" onclick="search()">Cari Kandidat</button>
-        <button class="secondary" onclick="resetFilters()">Reset</button>
-        <button class="secondary" onclick="exportCsv()">Export CSV</button>
-      </div>
-    </div>
+<main id="main-content">
+<div class="filter-panel">
+<div class="field">
+<label>Position Type</label>
+<select id="f-positionType">
+<option value="apply">Position Apply</option>
+<option value="suggested">Suggested Position</option>
+</select>
+</div>
+<div class="field">
+<label>Position</label>
+<input type="text" id="f-position" placeholder="e.g. Waiter, Chef de Partie" />
+</div>
+<div class="field">
+<label>Cruise Experience</label>
+<select id="f-cruiseExperience">
+<option value="">All</option>
+<option value="YES">Yes</option>
+<option value="NO">No</option>
+</select>
+</div>
+<div class="field">
+<label>Cruise Type</label>
+<select id="f-cruiseType">
+<option value="">All</option>
+<option value="OCEAN CRUISE">Ocean Cruise</option>
+<option value="RIVER CRUISE">River Cruise</option>
+<option value="YACHT">Yacht</option>
+</select>
+</div>
+<div class="field">
+<label>Province</label>
+<input type="text" id="f-province" placeholder="e.g. BALI" />
+</div>
+<div class="field">
+<label>C1/D Visa Valid Until Min.</label>
+<input type="date" id="f-c1dExpAfter" />
+</div>
+<div class="field">
+<label>Schengen Valid Until Min.</label>
+<input type="date" id="f-schengenExpAfter" />
+</div>
+<div class="actions">
+<button class="primary" onclick="search()">Search Candidates</button>
+<button class="secondary" onclick="resetFilters()">Reset</button>
+<button class="secondary" onclick="exportCsv()">Export CSV</button>
+</div>
+</div>
 
-    <div id="status-line"></div>
-    <div id="loading">Mencari kandidat di 6 sheet Smartsheet...</div>
+<div id="status-line"></div>
+<div id="loading">Searching candidates in Smartsheet...</div>
 
-    <table id="results-table" style="display:none;">
-      <thead>
-        <tr>
-          <th>PIN</th>
-          <th>Nama</th>
-          <th>Posisi</th>
-          <th>Sheet Asal</th>
-          <th>Cruise Exp</th>
-          <th>Tipe</th>
-          <th>Provinsi</th>
-          <th>C1/D Exp</th>
-          <th>Schengen Exp</th>
-          <th>WhatsApp</th>
-          <th>Email</th>
-        </tr>
-      </thead>
-      <tbody id="results-body"></tbody>
-    </table>
-  </main>
+<table id="results-table" style="display:none;">
+<thead>
+<tr>
+<th>PIN</th>
+<th>Name</th>
+<th>Position</th>
+<th>Department</th>
+<th>Source Sheet</th>
+<th>Cruise Exp</th>
+<th>Type</th>
+<th>Province</th>
+<th>C1/D Exp</th>
+<th>Schengen Exp</th>
+<th>WhatsApp</th>
+<th>Email</th>
+</tr>
+</thead>
+<tbody id="results-body"></tbody>
+</table>
+</main>
 </div>
 
 <script>
-  let accessKey = sessionStorage.getItem("bsm-access-key") || "";
-  let lastResults = [];
+let accessKey = sessionStorage.getItem("bsm-access-key") || "";
+let lastResults = [];
 
-  if (accessKey) showApp();
+if (accessKey) showApp();
 
-  function login() {
-    const pw = document.getElementById("password-input").value;
-    if (!pw) return;
-    accessKey = pw;
-    sessionStorage.setItem("bsm-access-key", pw);
-    showApp();
-  }
+function login() {
+const pw = document.getElementById("password-input").value;
+if (!pw) return;
+accessKey = pw;
+sessionStorage.setItem("bsm-access-key", pw);
+showApp();
+}
 
-  function showApp() {
-    document.getElementById("login-screen").style.display = "none";
-    document.getElementById("app").style.display = "block";
-    document.getElementById("main-content").style.display = "block";
-  }
+function showApp() {
+document.getElementById("login-screen").style.display = "none";
+document.getElementById("app").style.display = "block";
+document.getElementById("main-content").style.display = "block";
+}
 
-  function resetFilters() {
-    document.querySelectorAll(".field input, .field select").forEach((el) => (el.value = ""));
-  }
+function resetFilters() {
+document.getElementById("f-position").value = "";
+document.getElementById("f-cruiseExperience").value = "";
+document.getElementById("f-cruiseType").value = "";
+document.getElementById("f-province").value = "";
+document.getElementById("f-c1dExpAfter").value = "";
+document.getElementById("f-schengenExpAfter").value = "";
+document.getElementById("f-positionType").value = "apply";
+}
 
-  async function search() {
-    const params = new URLSearchParams({
-      position: document.getElementById("f-position").value,
-      cruiseExperience: document.getElementById("f-cruiseExperience").value,
-      cruiseType: document.getElementById("f-cruiseType").value,
-      province: document.getElementById("f-province").value,
-      c1dExpAfter: document.getElementById("f-c1dExpAfter").value,
-      schengenExpAfter: document.getElementById("f-schengenExpAfter").value,
-      stage: document.getElementById("f-stage").value,
-    });
+async function search() {
+const params = new URLSearchParams({
+positionType: document.getElementById("f-positionType").value,
+position: document.getElementById("f-position").value,
+cruiseExperience: document.getElementById("f-cruiseExperience").value,
+cruiseType: document.getElementById("f-cruiseType").value,
+province: document.getElementById("f-province").value,
+c1dExpAfter: document.getElementById("f-c1dExpAfter").value,
+schengenExpAfter: document.getElementById("f-schengenExpAfter").value,
+});
 
-    document.getElementById("loading").style.display = "block";
-    document.getElementById("results-table").style.display = "none";
-    document.getElementById("status-line").textContent = "";
+document.getElementById("loading").style.display = "block";
+document.getElementById("results-table").style.display = "none";
+document.getElementById("status-line").textContent = "";
 
-    try {
-      const res = await fetch("/api/search?" + params.toString(), {
-        headers: { "x-access-key": accessKey },
-      });
-      if (res.status === 401) {
-        sessionStorage.removeItem("bsm-access-key");
-        alert("Password salah atau kedaluwarsa. Silakan login ulang.");
-        location.reload();
-        return;
-      }
-      const data = await res.json();
-      lastResults = data.results || [];
-      renderResults(lastResults);
-      document.getElementById("status-line").textContent = `${lastResults.length} kandidat ditemukan.`;
-    } catch (e) {
-      document.getElementById("status-line").textContent = "Terjadi kesalahan: " + e.message;
-    } finally {
-      document.getElementById("loading").style.display = "none";
-    }
-  }
+try {
+const res = await fetch("/api/search?" + params.toString(), {
+headers: { "x-access-key": accessKey },
+});
+if (res.status === 401) {
+sessionStorage.removeItem("bsm-access-key");
+alert("Wrong or expired password. Please sign in again.");
+location.reload();
+return;
+}
+const data = await res.json();
+lastResults = data.results || [];
+renderResults(lastResults);
+document.getElementById("status-line").textContent = lastResults.length + " candidates found.";
+} catch (e) {
+document.getElementById("status-line").textContent = "An error occurred: " + e.message;
+} finally {
+document.getElementById("loading").style.display = "none";
+}
+}
 
-  function renderResults(results) {
-    const tbody = document.getElementById("results-body");
-    tbody.innerHTML = "";
-    for (const c of results) {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${c.pin}</td>
-        <td>${c.firstName} ${c.lastName}</td>
-        <td>${c.position}</td>
-        <td><span class="stage-badge">${c.stage}</span></td>
-        <td>${c.cruiseExperience}</td>
-        <td>${c.cruiseType}</td>
-        <td>${c.province}</td>
-        <td>${c.c1dExpDate || "-"}</td>
-        <td>${c.schengenExpDate || "-"}</td>
-        <td>${c.whatsapp ? `<a class="wa-link" href="${c.whatsapp}" target="_blank">Chat</a>` : "-"}</td>
-        <td>${c.email || "-"}</td>
-      `;
-      tbody.appendChild(tr);
-    }
-    document.getElementById("results-table").style.display = results.length ? "table" : "none";
-  }
+function renderResults(results) {
+const tbody = document.getElementById("results-body");
+tbody.innerHTML = "";
+for (const c of results) {
+const tr = document.createElement("tr");
+tr.innerHTML =
+"<td>" + c.pin + "</td>" +
+"<td>" + c.firstName + " " + c.lastName + "</td>" +
+"<td>" + c.position + "</td>" +
+"<td>" + (c.department || "-") + "</td>" +
+"<td><span class='stage-badge'>" + c.stage + "</span></td>" +
+"<td>" + c.cruiseExperience + "</td>" +
+"<td>" + c.cruiseType + "</td>" +
+"<td>" + c.province + "</td>" +
+"<td>" + (c.c1dExpDate || "-") + "</td>" +
+"<td>" + (c.schengenExpDate || "-") + "</td>" +
+"<td>" + (c.whatsapp ? "<a class='wa-link' href='" + c.whatsapp + "' target='_blank'>Chat</a>" : "-") + "</td>" +
+"<td>" + (c.email || "-") + "</td>";
+tbody.appendChild(tr);
+}
+document.getElementById("results-table").style.display = results.length ? "table" : "none";
+}
 
-  function exportCsv() {
-    if (!lastResults.length) return;
-    const headers = ["PIN","First Name","Last Name","Position","Sheet Asal","Cruise Experience","Cruise Type","Province","C1/D Exp","Schengen Exp","Phone","WhatsApp","Email"];
-    const rows = lastResults.map(c => [c.pin,c.firstName,c.lastName,c.position,c.stage,c.cruiseExperience,c.cruiseType,c.province,c.c1dExpDate,c.schengenExpDate,c.phone,c.whatsapp,c.email]);
-    const csv = [headers, ...rows].map(r => r.map(v => `"${(v||"").toString().replace(/"/g,'""')}"`).join(",")).join("\n");
-    const blob = new Blob([csv], { type: "text/csv" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `bsm-candidate-search-${Date.now()}.csv`;
-    a.click();
-  }
+function exportCsv() {
+if (!lastResults.length) return;
+const headers = ["PIN","First Name","Last Name","Position","Department","Source Sheet","Cruise Experience","Cruise Type","Province","C1/D Exp","Schengen Exp","Phone","WhatsApp","Email"];
+const rows = lastResults.map(c => [c.pin,c.firstName,c.lastName,c.position,c.department,c.stage,c.cruiseExperience,c.cruiseType,c.province,c.c1dExpDate,c.schengenExpDate,c.phone,c.whatsapp,c.email]);
+const csv = [headers, ...rows].map(r => r.map(v => '"' + (v||"").toString().replace(/"/g,'""') + '"').join(",")).join("\n");
+const blob = new Blob([csv], { type: "text/csv" });
+const url = URL.createObjectURL(blob);
+const a = document.createElement("a");
+a.href = url;
+a.download = "bsm-candidate-search-" + Date.now() + ".csv";
+a.click();
+}
 </script>
 </body>
 </html>
